@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <title>ylk eorz</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.1.slim.min.js"></script>
+    <script type="text/javascript" src="ylk-eorz.js"></script>
+    <script type="text/javascript" src="dict-dravinian.js"></script>
+    <script type="text/javascript" src="utils.js"></script>
+  </head>
+  <body>
+    <div class="content">
+    </div>
+    <script>
+      const trDict = parseDict(dictCSV)
+
+      const parsedText = parseText(trDict, text)
+      const formattedHtml = formatHtml(parsedText)
+
+      const content = $("div.content")
+      content.html(formattedHtml)
+    </script>
+  </body>
+</html>
