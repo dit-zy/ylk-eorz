@@ -11,9 +11,9 @@
     <div class="content">
     </div>
     <script>
-      const trDict = parseDict(dictCSV)
+      const drDict = new DravinianDict(dictCSV)
 
-      const parsedText = parseText(trDict, text)
+      const parsedText = parseText(drDict, text)
       const formattedHtml = formatHtml(parsedText)
 
       const content = $("div.content")
