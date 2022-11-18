@@ -10,6 +10,18 @@ Set.prototype.join = function(sep, sorted=true) {
   return arr.join(sep)
 }
 
+Set.prototype.union = function(other) {
+  return new Set([...this, ...other])
+}
+
+Array.prototype.uniq = function() {
+  return new Set(this)
+}
+
+Array.prototype.union = function() {
+  return this.reduce((acc, next) => acc.union(next), new Set())
+}
+
 class DravinianDict {
 
   constructor(dictCSV) {
@@ -46,7 +58,16 @@ class DravinianDict {
           }, '')
 
         parseWord(e.dr)  
-          .forEach(dr => this.indexWord(dr, eo))
+          .forEach(dr => {
+            this.indexWord(dr, eo)
+
+            if (dr.length < 3) {
+              return
+            }
+
+            this.indexWord(dr.slice(1), eo)
+            this.indexWord(dr.slice(0, -1), eo)
+          })
       })
   }
 
@@ -58,15 +79,19 @@ class DravinianDict {
   }
 
   attemptTranslate(dr) {
-    if (dr in this.index) {
-      return this.index[dr]
-        .map(eo => this.words[eo])
-        .reduce((acc, alts) => {
-          alts.forEach(eo => acc.add(eo))
-          return acc
-        }, new Set())
+    const variants = [dr]
+    if (3 <= dr.length) {
+      variants.push(dr.slice(1), dr.slice(0, -1))
     }
-    return null
+
+    const translations = variants
+      .filter(dr => dr in this.index)
+      .flatMap(dr => Array.from(this.index[dr]))
+      .uniq()
+      .map(eo => this.words[eo])
+      .union()
+
+    return translations.size == 0 ? null : translations
   }
 }
 
